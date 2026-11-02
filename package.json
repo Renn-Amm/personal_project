@@ -1,15 +1,18 @@
 {
-  "name": "personal-project",
+  "name": "loopback",
   "version": "1.0.0",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "src/location.ts",
   "scripts": {
     "lint": "npm run lint-typecheck && npm run lint-prettier && npm run lint-eslint",
     "lint-typecheck": "tsc",
     "lint-prettier": "prettier --check .",
     "lint-eslint": "eslint .",
     "format": "prettier --write .",
-    "start": "node ."
+    "location": "node src/location.ts",
+    "items": "node src/items.ts",
+    "traits": "node src/traits.ts",
+    "checkpoint": "node src/checkpoint.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
