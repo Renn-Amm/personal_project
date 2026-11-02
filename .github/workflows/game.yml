@@ -1,6 +1,7 @@
 name: game
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - "features/engine/**"
