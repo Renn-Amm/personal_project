@@ -1,4 +1,4 @@
-interface Checkpoint {
+export interface Checkpoint {
   player: string
   year: number
   location: string
@@ -6,7 +6,7 @@ interface Checkpoint {
   ending?: string
 }
 
-function loadCheckpoint(text: string): Checkpoint {
+export function loadCheckpoint(text: string): Checkpoint {
   let value: unknown
 
   try {
@@ -54,26 +54,4 @@ function isCheckpoint(value: unknown): value is Checkpoint {
   }
 
   return true
-}
-
-const checkpoints = [
-  '{"player":"Kai","year":1987,"location":"garage","choices":["go","talk"],"ending":"reboot"}',
-  '{"player":"Kai","year":2087,"location":"pawn-shop","choices":[]}',
-  '{"player":"Kai","year":"1987","location":"garage","choices":[]}',
-  '{"year":2087,"location":"pawn-shop","choices":[]}',
-  '{"player":"Kai","year":2087,"location":"pawn-shop","choices":[1,2]}',
-  '{"player":"Kai","year":2087,"location":"pawn-shop","choices":[],"ending":false}',
-  '{"player":"Kai","year":20',
-  "null",
-]
-
-for (const text of checkpoints) {
-  try {
-    const checkpoint = loadCheckpoint(text)
-    console.log(
-      `Loaded: ${checkpoint.player} in ${checkpoint.location}, ${checkpoint.year}, after ${checkpoint.choices.length} choices${checkpoint.ending ? `, last ending ${checkpoint.ending}` : ""}`,
-    )
-  } catch (error) {
-    console.log(`Rejected: ${error instanceof Error ? error.message : error}`)
-  }
 }
