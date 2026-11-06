@@ -4,6 +4,7 @@ export interface Checkpoint {
   location: string
   choices: string[]
   ending?: string
+  seen?: string[]
 }
 
 export function loadCheckpoint(text: string): Checkpoint {
@@ -50,6 +51,14 @@ function isCheckpoint(value: unknown): value is Checkpoint {
   }
 
   if ("ending" in value && typeof value.ending !== "string") {
+    return false
+  }
+
+  if (
+    "seen" in value &&
+    (!Array.isArray(value.seen) ||
+      !value.seen.every((ending) => typeof ending === "string"))
+  ) {
     return false
   }
 

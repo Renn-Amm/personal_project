@@ -24,4 +24,5 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
-      - run: pnpm start
+      - run: pnpm start play Kai --choices 1,2,1,2,1,1,1
+      - run: pnpm start memory reboot

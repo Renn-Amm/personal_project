@@ -21,9 +21,15 @@ Nothing about that night is what it looks like.
 | Package            | Folder            | What it holds                                                                   |
 | ------------------ | ----------------- | ------------------------------------------------------------------------------- |
 | `@loopback/engine` | `features/engine` | Locations, items, the `Traits` keeper, scenes and choices, the checkpoint guard |
-| `@loopback/game`   | `apps/game`       | The world, the story, the endings and the game loop                             |
+| `@loopback/game`   | `apps/game`       | The `loopback` command, the story file and the game loop                        |
 
 `@loopback/game` depends on `@loopback/engine` through `workspace:*`. Shared tool versions live in the catalog in `pnpm-workspace.yaml`.
+
+Inside `apps/game/src`, each folder is a modlet that the rest of the game reaches only through its `index.ts`:
+
+- `story` loads and checks the story file, and decides the ending
+- `commands/play` runs the night, with a private `ask` that shows the choices
+- `commands/memory` looks back at an ending
 
 ## Requirements
 
@@ -34,17 +40,22 @@ Nothing about that night is what it looks like.
 
 ```sh
 pnpm install
-pnpm start
+pnpm start play
+pnpm start play Aung
+pnpm start play Aung --choices 1,2,1,2,1,1,1
+pnpm start memory reboot
+pnpm start memory scrap --spoilers
+pnpm start --help
 ```
 
-Type the number of a choice and press Enter. Options:
+- `play` asks for your name if you leave it out, then lets you pick each choice with the arrow keys. Locked choices show what they need.
+- `--choices` plays a fixed path without asking, which is also what the GitHub workflow uses.
+- `memory` shows an ending you have reached. Endings you have not reached stay hidden unless you add `--spoilers`.
+- Press Ctrl+C at any question to leave quietly.
 
-```sh
-pnpm start --name Aung
-pnpm start --choices 1,1,2,1,1,2
-```
+## The story file
 
-`--choices` plays a fixed path without asking, which is also what the GitHub workflow uses.
+The whole story lives in `apps/game/src/story/loopback.json`: the `locations`, the `scenes` with their `choices`, and the four `endings`. Each choice has a `label`, the `next` scene (or `@ending`), its `effects` on the traits, and optionally a `flag`, an item to `use`, a `requires` lock and `secret`. Change a line or add a scene there, and the game picks it up the next time it starts. If the file is missing, is not valid JSON or has a piece in the wrong shape, the game says which one and stops.
 
 ## Lint
 

@@ -11,7 +11,9 @@
     "start": "node ."
   },
   "dependencies": {
-    "@loopback/engine": "workspace:*"
+    "@inquirer/prompts": "^8.7.5",
+    "@loopback/engine": "workspace:*",
+    "commander": "^15.0.0"
   },
   "devDependencies": {
     "@eslint/js": "catalog:",
