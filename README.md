@@ -8,63 +8,100 @@ To stop it, Kai has to get past Omnivault security with help from Juno, a netrun
 
 Nothing about that night is what it looks like.
 
-## How it plays
+## Features
 
-- Every choice moves three traits: **trust**, **courage** and **paradox**.
-- Some choices stay locked until you have the right gear or have heard the right story.
-- Four endings, depending on what you did and who you became along the way.
-- Inspired by 80s sci-fi, the original space opera trilogies and cyberpunk. Every line is written fresh.
-- The game remembers your last run. Get caught in a loop and the next night starts a little differently.
+- Choices that matter: every decision moves three traits, **trust**, **courage** and **paradox**
+- Locked choices that open up once you have the right gear or have heard the right story
+- Four endings, and a closing line about who Kai became along the way
+- A game that remembers: get caught in a loop and the next night starts a little differently
+- A memory log of the endings you have reached, with the rest kept hidden
+- Pick choices with the arrow keys, or play a fixed path for testing
+- The whole story lives in one JSON file, checked against its expected shape on every start
 
-## Packages
+## Tech stack
 
-| Package            | Folder            | What it holds                                                                   |
-| ------------------ | ----------------- | ------------------------------------------------------------------------------- |
-| `@loopback/engine` | `features/engine` | Locations, items, the `Traits` keeper, scenes and choices, the checkpoint guard |
-| `@loopback/game`   | `apps/game`       | The `loopback` command, the story file and the game loop                        |
+- TypeScript running directly on Node.js 24
+- Commander and Inquirer for the command line
+- pnpm workspaces with a shared version catalog
+- Nx for running tasks in dependency order with caching
+- ESLint and Prettier
+- GitHub Actions
 
-`@loopback/game` depends on `@loopback/engine` through `workspace:*`. Shared tool versions live in the catalog in `pnpm-workspace.yaml`.
-
-Inside `apps/game/src`, each folder is a modlet that the rest of the game reaches only through its `index.ts`:
-
-- `story` loads and checks the story file, and decides the ending
-- `commands/play` runs the night, with a private `ask` that shows the choices
-- `commands/memory` looks back at an ending
-
-## Requirements
-
-- Node.js 24
-- pnpm 12 (downloaded for you through `devEngines` if missing)
-
-## Play
+## Getting started
 
 ```sh
 pnpm install
 pnpm start play
-pnpm start play Aung
-pnpm start play Aung --choices 1,2,1,2,1,1,1
-pnpm start memory reboot
-pnpm start memory scrap --spoilers
+```
+
+pnpm 12 is pinned in `package.json` and downloaded for you if you have a different version.
+
+## Usage
+
+```sh
+pnpm start play                               # asks for your name, then starts the night
+pnpm start play Aung                          # play as Aung
+pnpm start play Aung --choices 1,2,1,2,1,1,1  # play a fixed path without prompts
+pnpm start memory reboot                      # look back at an ending you reached
+pnpm start memory scrap --spoilers            # read one you have not reached yet
 pnpm start --help
 ```
 
-- `play` asks for your name if you leave it out, then lets you pick each choice with the arrow keys. Locked choices show what they need.
-- `--choices` plays a fixed path without asking, which is also what the GitHub workflow uses.
-- `memory` shows an ending you have reached. Endings you have not reached stay hidden unless you add `--spoilers`.
-- Press Ctrl+C at any question to leave quietly.
+Press Ctrl+C at any question to leave.
 
-## The story file
+## Project structure
 
-The whole story lives in `apps/game/src/story/loopback.json`: the `locations`, the `scenes` with their `choices`, and the four `endings`. Each choice has a `label`, the `next` scene (or `@ending`), its `effects` on the traits, and optionally a `flag`, an item to `use`, a `requires` lock and `secret`. Change a line or add a scene there, and the game picks it up the next time it starts. If the file is missing, is not valid JSON or has a piece in the wrong shape, the game says which one and stops.
-
-## Lint
-
-```sh
-pnpm lint
+```
+apps/
+  game/                    the loopback command
+    src/commands/play/     the game loop and the choice prompt
+    src/commands/memory/   the memory log
+    src/story/             loads and checks the story, decides the ending
+    src/story/loopback.json
+features/
+  engine/                  locations, items, traits, scenes and the checkpoint guard
 ```
 
-Nx runs the type check, ESLint and Prettier in every package, with the engine first because the game depends on it.
+`@loopback/game` depends on `@loopback/engine`. Each folder under `apps/game/src` has a single `index.ts` that is its only public entry point, so the rest of the game never reaches into its files.
 
-## Module 1
+## Writing the story
 
-The first version of each piece, one file per topic, is in the commit "Add core game types".
+Everything the player reads is in `apps/game/src/story/loopback.json`:
+
+- `locations`: where scenes happen, each with a name, a year and whether its signal is glitched
+- `scenes`: the lines of text and the choices at each step
+- `endings`: the four endings, each with a title and its lines
+
+A choice looks like this:
+
+```json
+{
+  "label": "Let Juno turn your walkman into an EMP.",
+  "next": "rooftop",
+  "flag": "upgraded",
+  "effects": [{ "trait": "courage", "amount": 1 }]
+}
+```
+
+- `next` is the id of the next scene, or `@ending` to finish the night
+- `flag` marks something the player did, for later choices and endings to check
+- `use` plays an item, such as a gadget, a keycard or a memory tape
+- `requires` locks the choice behind a trait level or a flag
+- `secret` hides a locked choice instead of showing it
+
+Edit the file and the game picks it up on the next start. If it is missing, is not valid JSON or has a piece in the wrong shape, the game says which and stops.
+
+## Development
+
+```sh
+pnpm lint          # type check, ESLint and Prettier in every package
+pnpm nx graph      # how the packages depend on each other
+```
+
+The GitHub workflow lints both packages and plays a full path through the story on every change.
+
+## Roadmap
+
+- A server that hosts the story, so it can be played from anywhere
+- A browser version with a CRT look
+- More nights in the loop
