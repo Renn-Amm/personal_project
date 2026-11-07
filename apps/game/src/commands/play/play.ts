@@ -4,7 +4,7 @@ import { type Choice, type Scene } from "@loopback/engine/scene"
 import { getRuns, getStory, saveRun } from "@loopback/engine/services"
 import { Traits } from "@loopback/engine/traits"
 
-import { decideEnding as pickEnding, growth } from "../../story/index.ts"
+import { decideEnding as pickEnding, growth } from "../../endings/index.ts"
 import { ask, effectsText, visible } from "./ask.ts"
 
 interface Options {

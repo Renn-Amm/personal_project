@@ -9,6 +9,12 @@ export default async function buildApp(
 ): Promise<FastifyInstance> {
   const app = Fastify()
 
+  app.setErrorHandler(async (error, request, reply) => {
+    const message = error instanceof Error ? error.message : String(error)
+
+    return reply.code(500).send({ error: message })
+  })
+
   await app.register(cors)
   await app.register(story)
   await app.register(runs, { file: runsFile })
