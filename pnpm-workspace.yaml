@@ -12,4 +12,5 @@ catalog:
   typescript-eslint: "^8.72.0"
 
 allowBuilds:
+  esbuild: true
   nx: true

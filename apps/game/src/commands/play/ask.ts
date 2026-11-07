@@ -1,5 +1,6 @@
 import { select } from "@inquirer/prompts"
-import { type Choice, isMet, type Traits } from "@loopback/engine"
+import { type Choice, isMet } from "@loopback/engine/scene"
+import { type Traits } from "@loopback/engine/traits"
 
 export function effectsText(choice: Choice): string {
   const parts = choice.effects.map(

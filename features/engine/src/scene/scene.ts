@@ -1,5 +1,5 @@
-import { type Item } from "./items.ts"
-import { type Trait, type Traits } from "./traits.ts"
+import { type Item } from "../items/index.ts"
+import { type Trait, type Traits } from "../traits/index.ts"
 
 export interface Effect {
   trait: Trait

@@ -1,0 +1,111 @@
+:root {
+  --glow: #39ff9c;
+  --dim: #1f8f5a;
+  --pink: #ff3fa4;
+  --bg: #050807;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at center, #0c1712, var(--bg));
+  color: var(--glow);
+  font-family: "Courier New", ui-monospace, monospace;
+  text-shadow: 0 0 4px rgb(57 255 156 / 60%);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 0%) 0 2px,
+    rgb(0 0 0 / 25%) 2px 4px
+  );
+}
+
+#archive {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+h1 {
+  font-size: 1.4rem;
+  letter-spacing: 0.1em;
+}
+
+h2 {
+  color: var(--pink);
+  text-shadow: 0 0 6px rgb(255 63 164 / 60%);
+}
+
+button,
+input {
+  font: inherit;
+  color: var(--glow);
+  background: transparent;
+  border: 1px solid var(--dim);
+  padding: 0.4rem 0.8rem;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:hover,
+button:focus-visible {
+  background: rgb(57 255 156 / 12%);
+}
+
+.boot {
+  padding-top: 20vh;
+}
+
+.pilot {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.endings {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+  border-top: 1px solid var(--dim);
+}
+
+.endings li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0.4rem;
+  border-bottom: 1px solid var(--dim);
+  cursor: pointer;
+}
+
+.endings li:hover,
+.endings li.open {
+  background: rgb(57 255 156 / 10%);
+}
+
+.endings .state {
+  color: var(--dim);
+}
+
+.endings li.reached .state {
+  color: var(--pink);
+}
+
+.panel {
+  min-height: 8rem;
+  line-height: 1.5;
+}
+
+.warning,
+.error {
+  color: var(--pink);
+}

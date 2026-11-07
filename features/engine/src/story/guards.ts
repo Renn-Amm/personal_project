@@ -1,16 +1,21 @@
+import { type Item } from "../items/index.ts"
+import { type Location } from "../location/index.ts"
 import {
   type Choice,
   type Effect,
-  type Item,
-  type Location,
   type Requirement,
   type Scene,
-  type Trait,
-} from "@loopback/engine"
+} from "../scene/index.ts"
+import { type Trait } from "../traits/index.ts"
+import {
+  type Ending,
+  type EndingCard,
+  type EndingPage,
+  type EndingText,
+  type Story,
+} from "./types.ts"
 
-import { type Ending, type EndingText, type Story } from "./types.ts"
-
-const endingIds: Ending[] = ["blackout", "loopback", "reboot", "scrap"]
+export const endingIds: Ending[] = ["blackout", "loopback", "reboot", "scrap"]
 
 export function isStory(value: unknown): value is Story {
   if (typeof value !== "object" || value === null) {
@@ -211,15 +216,39 @@ function isEndings(value: unknown): value is Record<Ending, EndingText> {
       ([key]) => key === id,
     )?.[1]
 
-    return (
-      typeof ending === "object" &&
-      ending !== null &&
-      "title" in ending &&
-      typeof ending.title === "string" &&
-      "lines" in ending &&
-      isTextList(ending.lines)
-    )
+    return isEndingText(ending)
   })
+}
+
+function isEndingText(value: unknown): value is EndingText {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "title" in value &&
+    typeof value.title === "string" &&
+    "lines" in value &&
+    isTextList(value.lines)
+  )
+}
+
+export function isEndingCard(value: unknown): value is EndingCard {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "id" in value &&
+    typeof value.id === "string" &&
+    isEnding(value.id) &&
+    "title" in value &&
+    typeof value.title === "string"
+  )
+}
+
+export function isEndingCardList(value: unknown): value is EndingCard[] {
+  return Array.isArray(value) && value.every(isEndingCard)
+}
+
+export function isEndingPage(value: unknown): value is EndingPage {
+  return isEndingCard(value) && isEndingText(value)
 }
 
 function isTrait(value: unknown): value is Trait {

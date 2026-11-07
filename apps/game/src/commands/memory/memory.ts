@@ -1,7 +1,7 @@
-import loadStory, { isEnding } from "../../story/index.ts"
-import { readLastRun } from "../../lib/save.ts"
+import { getEnding, getRuns } from "@loopback/engine/services"
 
 interface Options {
+  pilot: string
   spoilers?: boolean
 }
 
@@ -9,21 +9,17 @@ export default async function memory(
   ending: string,
   options: Options,
 ): Promise<void> {
-  const story = await loadStory()
+  const [page, runs] = await Promise.all([
+    getEnding(ending),
+    getRuns(options.pilot),
+  ])
+  const reached = runs.some((run) => run.ending === page.id)
 
-  if (!isEnding(ending)) {
-    throw new Error(
-      `There is no ending called "${ending}". Try ${Object.keys(story.endings).join(", ")}.`,
-    )
-  }
-
-  const lastRun = await readLastRun()
-  const reached = lastRun?.seen?.includes(ending) ?? false
-  const { title, lines } = story.endings[ending]
-
-  console.log(title)
+  console.log(page.title)
   console.log(
-    reached ? "You have lived this one." : "You have not lived this one yet.",
+    reached
+      ? `${options.pilot} has lived this one.`
+      : `${options.pilot} has not lived this one yet.`,
   )
   console.log()
 
@@ -35,7 +31,7 @@ export default async function memory(
     return
   }
 
-  for (const line of lines) {
+  for (const line of page.lines) {
     console.log(line)
   }
 }

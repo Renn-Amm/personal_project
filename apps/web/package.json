@@ -1,0 +1,25 @@
+{
+  "name": "@loopback/web",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "lint": "pnpm run \"/^lint-.*/\"",
+    "lint-typecheck": "tsc",
+    "lint-eslint": "eslint .",
+    "lint-prettier": "prettier --check .",
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@loopback/engine": "workspace:*"
+  },
+  "devDependencies": {
+    "@eslint/js": "catalog:",
+    "eslint": "catalog:",
+    "globals": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:",
+    "vite": "^7.1.0"
+  }
+}

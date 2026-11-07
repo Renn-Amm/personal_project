@@ -1,16 +1,10 @@
-import {
-  type Choice,
-  header,
-  type Scene,
-  Traits,
-  useItem,
-} from "@loopback/engine"
+import { useItem } from "@loopback/engine/items"
+import { header } from "@loopback/engine/location"
+import { type Choice, type Scene } from "@loopback/engine/scene"
+import { getRuns, getStory, saveRun } from "@loopback/engine/services"
+import { Traits } from "@loopback/engine/traits"
 
-import loadStory, {
-  decideEnding as pickEnding,
-  growth,
-} from "../../story/index.ts"
-import { readLastRun, saveRun } from "../../lib/save.ts"
+import { decideEnding as pickEnding, growth } from "../../story/index.ts"
 import { ask, effectsText, visible } from "./ask.ts"
 
 interface Options {
@@ -21,7 +15,7 @@ export default async function play(
   pilot: string,
   options: Options,
 ): Promise<void> {
-  const story = await loadStory()
+  const story = await getStory()
   const planned = options.choices?.split(",").map(Number) ?? []
   const interactive = process.stdin.isTTY && planned.length === 0
 
@@ -70,12 +64,12 @@ export default async function play(
   console.log("L O O P B A C K")
   console.log("A retro-future story about memory, machines and second chances.")
 
-  const lastRun = await readLastRun()
+  const [lastRun] = await getRuns(pilot)
 
   if (lastRun) {
     console.log()
     console.log(
-      `Deja vu. Somewhere, a version of ${lastRun.player} already lived this night and reached ${lastRun.ending ?? "nothing"} after ${lastRun.choices.length} choices.`,
+      `Deja vu. Somewhere, a version of ${lastRun.player} already lived this night and reached ${lastRun.ending} after ${lastRun.choices.length} choices.`,
     )
 
     if (lastRun.ending === "loopback") {
@@ -154,14 +148,14 @@ export default async function play(
     console.log(`- ${line}`)
   }
 
-  const seen = new Set([...(lastRun?.seen ?? []), ending])
-
-  await saveRun({
+  const saved = await saveRun({
     player: pilot,
     year: 2087,
     location: "city",
     choices: taken,
     ending,
-    seen: [...seen],
   })
+
+  console.log()
+  console.log(`Run #${saved.id} is in the archive.`)
 }

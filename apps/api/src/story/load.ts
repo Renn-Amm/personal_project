@@ -1,8 +1,7 @@
 import { readFile } from "node:fs/promises"
 import path from "node:path"
 
-import { isStory } from "./guards.ts"
-import { type Story } from "./types.ts"
+import { isStory, type Story } from "@loopback/engine/story"
 
 export default async function loadStory(name = "loopback"): Promise<Story> {
   const file = path.join(import.meta.dirname, `${name}.json`)

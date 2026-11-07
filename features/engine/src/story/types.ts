@@ -1,4 +1,5 @@
-import { type Location, type Scene } from "@loopback/engine"
+import { type Location } from "../location/index.ts"
+import { type Scene } from "../scene/index.ts"
 
 export type Ending = "blackout" | "loopback" | "reboot" | "scrap"
 
@@ -12,3 +13,9 @@ export interface Story {
   scenes: Scene[]
   endings: Record<Ending, EndingText>
 }
+
+export type EndingCard = Pick<EndingText, "title"> & {
+  id: Ending
+}
+
+export type EndingPage = EndingCard & EndingText

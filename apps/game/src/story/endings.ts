@@ -1,6 +1,5 @@
-import { type Traits } from "@loopback/engine"
-
-import { type Ending } from "./types.ts"
+import { type Ending } from "@loopback/engine/story"
+import { type Traits } from "@loopback/engine/traits"
 
 export function decideEnding(traits: Traits, flags: string[]): Ending {
   if (flags.includes("deleted")) {

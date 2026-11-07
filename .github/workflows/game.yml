@@ -5,7 +5,7 @@ on:
   push:
     paths:
       - "features/engine/**"
-      - "apps/game/**"
+      - "apps/**"
       - "package.json"
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
@@ -13,7 +13,7 @@ on:
       - ".github/workflows/game.yml"
 
 jobs:
-  lint:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,5 +24,15 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm --filter @loopback/web build
+      - name: Start the archive
+        run: |
+          pnpm --filter @loopback/api start &
+          for i in $(seq 1 20); do
+            curl -sf http://localhost:3000/endings > /dev/null && exit 0
+            sleep 1
+          done
+          exit 1
       - run: pnpm start play Kai --choices 1,2,1,2,1,1,1
       - run: pnpm start memory reboot

@@ -1,0 +1,7 @@
+{
+  "ext": "ts,json",
+  "execMap": {
+    "ts": "node"
+  },
+  "watch": ["src", "../../features/engine/src"]
+}

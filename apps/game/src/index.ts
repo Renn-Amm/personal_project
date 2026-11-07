@@ -28,6 +28,7 @@ program
   .command("memory")
   .description("Look back at an ending: blackout, loopback, reboot or scrap")
   .argument("<ending>", "the ending to remember")
+  .option("-p, --pilot <name>", "whose memories to look through", "Kai")
   .option("-s, --spoilers", "read an ending you have not reached yet")
   .action(memory)
 

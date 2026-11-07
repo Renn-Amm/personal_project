@@ -1,0 +1,33 @@
+{
+  "name": "@loopback/api",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "imports": {
+    "#story": "./src/story/index.ts"
+  },
+  "scripts": {
+    "lint": "pnpm run \"/^lint-.*/\"",
+    "lint-typecheck": "tsc",
+    "lint-eslint": "eslint .",
+    "lint-prettier": "prettier --check .",
+    "dev": "nodemon src/index.ts",
+    "start": "node .",
+    "test": "node --test \"src/**/*.test.ts\""
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.4.1",
+    "@loopback/engine": "workspace:*",
+    "fastify": "^5.8.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "catalog:",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "globals": "catalog:",
+    "nodemon": "^3.1.10",
+    "prettier": "catalog:",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:"
+  }
+}
